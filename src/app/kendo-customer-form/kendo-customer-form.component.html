@@ -1,0 +1,87 @@
+<kendo-dialog
+      *ngIf="active"
+      [width]="300"
+      [height]="450"
+      (close)="closeForm()"
+    >
+      <kendo-dialog-titlebar>
+        {{ isNew ? "Add new Client" : "Edit Client" }}
+      </kendo-dialog-titlebar>
+
+      <form novalidate class="k-form k-form-md" [formGroup]="editForm">
+        <div class="row">
+          <kendo-formfield>
+            <kendo-label [for]="firstName" text="First Name"></kendo-label>
+            <kendo-textbox
+              formControlName="firstName"
+              [clearButton]="true"
+              #firstName
+              required
+            ></kendo-textbox>
+
+            <kendo-formerror>Error: First Name is required</kendo-formerror>
+          </kendo-formfield>
+          <kendo-formfield>
+            <kendo-label [for]="lastName" text="Last Name"></kendo-label>
+            <kendo-textbox
+              formControlName="lastName"
+              [clearButton]="true"
+              #lastName
+              required
+            ></kendo-textbox>
+
+            <kendo-formerror>Error: Last Name is required</kendo-formerror>
+          </kendo-formfield>
+
+        </div>
+        <kendo-formfield>
+          <kendo-label [for]="email" text="Email"></kendo-label>
+          <kendo-textbox
+            formControlName="email"
+            [clearButton]="true"
+            #email
+            required
+          ></kendo-textbox>
+
+          <kendo-formerror *ngIf="editForm.controls?.email?.errors?.required"
+            >Error: Email is required</kendo-formerror
+          >
+          <kendo-formerror *ngIf="editForm.controls.email.errors?.email"
+            >Error: Not valid email format</kendo-formerror
+          >
+        </kendo-formfield>
+
+        <kendo-formfield>
+          <kendo-label [for]="phoneNumber" text="Phone Number"></kendo-label>
+          <kendo-maskedtextbox
+            #phoneNumber
+            formControlName="phoneNumber"
+            [mask]="phoneNumberMask"
+            [value]="phoneNumberValue"
+          ></kendo-maskedtextbox>
+          <kendo-formerror>
+            <div *ngIf="editForm.controls.phoneNumber.errors">
+              Error: Not a valid phone number format
+            </div>
+            <div *ngIf="editForm.controls.phoneNumber.errors?.required">
+              Error: Phone number is required
+            </div>
+          </kendo-formerror>
+        </kendo-formfield>
+
+      </form>
+
+      <kendo-dialog-actions layout="start">
+        <button
+          kendoButton
+          themeColor="primary"
+          [disabled]="!editForm.valid"
+          (click)="onSave($event)"
+        >
+          Save
+        </button>
+        <button kendoButton (click)="onCancel($event)">
+          Cancel
+        </button>
+      </kendo-dialog-actions>
+    </kendo-dialog>

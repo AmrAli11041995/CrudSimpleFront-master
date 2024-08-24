@@ -1,0 +1,97 @@
+<ngx-spinner type="ball-scale-multiple">
+  <p class="text-white">loading...</p>
+</ngx-spinner>
+
+<mat-toolbar color="primary">
+  <span>Client Management Crud App</span>
+  <span class="example-spacer"></span>
+  <!-- <button mat-raised-button color="accent" (click)="openCustomerDialog()">ADD Client</button> -->
+ </mat-toolbar>
+ <div class="main-body">
+     <!-- <mat-form-field aria-haspopup="outline">
+       <mat-label>Filter</mat-label>
+       <input matInput (keyup)="applyFilter($event)" placeholder="i.e David Smith , aaa@ss.com , 01262454785" #input>
+     </mat-form-field> -->
+     <div class="table-container">
+       <!-- <table mat-table [dataSource]="dataSource" matSort>
+         <ng-container matColumnDef="id">
+           <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+           <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+         </ng-container>
+         <ng-container matColumnDef="fullName">
+           <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+           <td mat-cell *matCellDef="let row"> {{row.fullName}}</td>
+         </ng-container>
+
+          <ng-container matColumnDef="email">
+           <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+           <td mat-cell *matCellDef="let row"> {{row.email}}</td>
+         </ng-container>
+
+         <ng-container matColumnDef="phoneNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone Number </th>
+          <td mat-cell *matCellDef="let row"> {{row.phoneNumber}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+           <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+           <td mat-cell *matCellDef="let row">
+             <span (click)="openEditForm(row)" class="action-icon" style="margin-right: 5px;">
+               <mat-icon color="primary">edit</mat-icon>
+             </span>
+             <span (click)="deleteCustomer(row.id)" class="action-icon">
+               <mat-icon color="warn">delete</mat-icon>
+             </span>
+           </td>
+         </ng-container>
+
+         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+         <tr class="mat-row" *matNoDataRow>
+           <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+         </tr>
+       </table>
+
+       <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator> -->
+
+
+       <kendo-grid
+        [kendoGridBinding]="gridview"
+       [pageable]="true"
+       [pageSize]="5"
+       [filterable]="true"
+       (edit)="editHandler($event)"
+       (remove)="removeHandler($event)"
+       (add)="addHandler()">
+
+       <ng-template kendoGridToolbarTemplate>
+        <button  kendoGridAddCommand [primary]="true">Add new</button>
+      </ng-template>
+
+      <kendo-grid-column field="fullName" title="Full Name"></kendo-grid-column>
+      <kendo-grid-column
+        field="email"
+        title="Email"
+      ></kendo-grid-column>
+      <kendo-grid-column
+        field="phoneNumber"
+        title="Phone Number"
+      ></kendo-grid-column>
+      <kendo-grid-command-column title="Actions" [width]="220">
+        <ng-template kendoGridCellTemplate>
+          <button kendoGridEditCommand [primary]="true">Edit</button>
+          <button kendoGridRemoveCommand>Delete</button>
+        </ng-template>
+      </kendo-grid-command-column>
+    </kendo-grid>
+
+    <app-kendo-customer-form
+      [model]="editDataItem"
+      [isNew]="isNew"
+      (save)="saveHandler($event)"
+      (cancel)="cancelHandler()"
+    >
+    </app-kendo-customer-form>
+     </div>
+   </div>
