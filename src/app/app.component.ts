@@ -4,7 +4,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CustomerService } from './customer.service';
-import { CustomerComponent } from './customer/customer.component';
 import { State } from '@progress/kendo-data-query';
 import { AddEvent, RemoveEvent } from '@progress/kendo-angular-grid';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -23,12 +22,16 @@ export class AppComponent {
   ];
 
   dataSource!: MatTableDataSource<any>;
+  public gridState: State = {
+    sort: [],
+    skip: 0,
+    take: 5,
+  };
+  editDataItem: any;
+  isNew: boolean=false;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private dialog: MatDialog,
     private custService: CustomerService,
   ) {}
 
@@ -36,16 +39,7 @@ export class AppComponent {
     this.getCustomersList();
   }
 
-  openCustomerDialog() {
-    const dialogRef = this.dialog.open(CustomerComponent);
-    dialogRef.afterClosed().subscribe({
-      next: (val) => {
-        if (val) {
-          this.getCustomersList();
-        }
-      },
-    });
-  }
+
   pagination :any={};
 gridview= [];
   getCustomersList(filter?: any) {
@@ -54,9 +48,6 @@ gridview= [];
         debugger
         if(res.status){
           this.gridview = res.data.data;
-          this.dataSource = new MatTableDataSource(res.data.data);
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
           this.pagination.take = res.data.totalCount
           console.log(res.data);
         } else {
@@ -69,14 +60,7 @@ gridview= [];
       },
     });
   }
-  // for searching customer with name
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
+
 
   deleteCustomer(id: any) {
     let confirm = window.confirm("Are you sure you want to delete this customer?");
@@ -93,40 +77,10 @@ gridview= [];
     }
   }
 
-  openEditForm(data: any) {
-    debugger;
-    const dialogRef = this.dialog.open(CustomerComponent, {
-      data,
-    });
 
-    dialogRef.afterClosed().subscribe({
-      next: (val) => {
-        if (val) {
-          this.getCustomersList();
-        }
-      }
-    });
-  }
 
   // ---------------------- for Kendo ------------------------
-public gridState: State = {
-  sort: [],
-  skip: 0,
-  take: 5,
-};
-editDataItem: any;
-isNew: boolean=false;
 
-public onStateChange(state: State): void {
-  debugger;
-  this.gridState = state;
-
-  let model={
-    currentPage:((state.skip||0 )/ ((state.take)||5))+1,
-    pageSize:state.take
-  }
-  this.getCustomersList(model);
-}
 
 public addHandler(): void {
   this.editDataItem = {};
